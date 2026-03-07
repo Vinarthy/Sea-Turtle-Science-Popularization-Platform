@@ -107,6 +107,76 @@ const turtleSpecies = [
 
     distribution: '玳瑁主要分布在热带珊瑚礁',
   },
+  {
+    id: 'Carettacaretta',
+    name: '红海龟',
+    folder: '/lifecycle/Carettacaretta',
+
+    stages: {
+      egg: { title: '卵期', description: '每窝约140枚' },
+      hatchling: { title: '幼年期', description: '夜间出巢' },
+      juvenile: { title: '青年期', description: '生活在珊瑚礁' },
+      adult: { title: '成年期', description: '以鳞片闻名' },
+    },
+
+    distribution: '红海龟主要分布在热带海域',
+  },
+  {
+    id: 'Lepidochelysolivacea',
+    name: '太平洋丽龟',
+    folder: '/lifecycle/Lepidochelysolivacea',
+
+    stages: {
+      egg: { title: '卵期', description: '每窝约140枚' },
+      hatchling: { title: '幼年期', description: '夜间出巢' },
+      juvenile: { title: '青年期', description: '生活在珊瑚礁' },
+      adult: { title: '成年期', description: '以鳞片闻名' },
+    },
+
+    distribution: '太平洋丽龟主要分布在热带海域',
+  },
+  {
+    id: 'Lepidochelyskempii',
+    name: '肯氏丽龟',
+    folder: '/lifecycle/Lepidochelyskempii',
+
+    stages: {
+      egg: { title: '卵期', description: '每窝约140枚' },
+      hatchling: { title: '幼年期', description: '夜间出巢' },
+      juvenile: { title: '青年期', description: '生活在珊瑚礁' },
+      adult: { title: '成年期', description: '以鳞片闻名' },
+    },
+
+    distribution: '肯氏丽龟主要分布在热带海域',
+  },
+  {
+    id: 'Dermochelyscoriacea',
+    name: '棱皮龟',
+    folder: '/lifecycle/Dermochelyscoriacea',
+
+    stages: {
+      egg: { title: '卵期', description: '每窝约140枚' },
+      hatchling: { title: '幼年期', description: '夜间出巢' },
+      juvenile: { title: '青年期', description: '生活在珊瑚礁' },
+      adult: { title: '成年期', description: '以鳞片闻名' },
+    },
+
+    distribution: '棱皮龟主要分布在热带海域',
+  },
+  {
+    id: 'Natatordepressus',
+    name: '平背龟',
+    folder: '/lifecycle/Natatordepressus',
+
+    stages: {
+      egg: { title: '卵期', description: '每窝约140枚' },
+      hatchling: { title: '幼年期', description: '夜间出巢' },
+      juvenile: { title: '青年期', description: '生活在珊瑚礁' },
+      adult: { title: '成年期', description: '以鳞片闻名' },
+    },
+
+    distribution: '平背龟主要分布在热带海域',
+  },
 ]
 
 const selectedSpecies = ref(turtleSpecies[0])
