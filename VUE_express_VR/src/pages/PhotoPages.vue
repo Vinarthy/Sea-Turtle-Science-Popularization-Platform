@@ -70,12 +70,15 @@ const photos = ref([
 <style scoped>
 .photos-page {
   width: 100%;
+  background: #f5f7fa;
+  padding-bottom: 40px;
 }
 
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fit, 300px);
+  justify-content: center;
+  gap: 50px;
   padding: 20px;
 }
 .page-header {

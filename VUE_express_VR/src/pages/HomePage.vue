@@ -1,30 +1,10 @@
-<template>
-  <div class="home-page">
-    <div class="content-wrapper">
-      <div class="annotations">
-        <h2 class="annotation-title">{{ currentAnnotations.title }}</h2>
-
-        <div v-for="(text, index) in currentAnnotations.texts" :key="index" class="annotation-item">
-          <span class="annotation-arrow">→</span>
-          <span class="annotation-text">{{ text }}</span>
-        </div>
-      </div>
-
-      <div class="main-image-container">
-        <img class="main-image" :src="images[currentIndex]" alt="图片展示" />
-
-        <div class="nav-arrows">
-          <button class="arrow-button prev" @click="prevImage">‹</button>
-          <button class="arrow-button next" @click="nextImage">›</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script lang="ts">
+import TurtleLifecycle from '@/components/TurtleLifecycle.vue'
 export default {
   name: 'HomePage',
+  components: {
+    TurtleLifecycle,
+  },
   data() {
     return {
       images: [
@@ -88,6 +68,30 @@ export default {
   },
 }
 </script>
+<template>
+  <div class="home-page">
+    <div class="content-wrapper">
+      <div class="annotations">
+        <h2 class="annotation-title">{{ currentAnnotations.title }}</h2>
+
+        <div v-for="(text, index) in currentAnnotations.texts" :key="index" class="annotation-item">
+          <span class="annotation-arrow">→</span>
+          <span class="annotation-text">{{ text }}</span>
+        </div>
+      </div>
+
+      <div class="main-image-container">
+        <img class="main-image" :src="images[currentIndex]" alt="图片展示" />
+
+        <div class="nav-arrows">
+          <button class="arrow-button prev" @click="prevImage">‹</button>
+          <button class="arrow-button next" @click="nextImage">›</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <TurtleLifecycle />
+</template>
 
 <style scoped>
 .home-page {

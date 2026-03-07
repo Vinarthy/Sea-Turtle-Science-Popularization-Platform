@@ -1,6 +1,16 @@
 <script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 
+interface BarArea {
+  x: number
+  y: number
+  width: number
+  height: number
+  label: string
+  value: number
+}
+
+const barAreas: BarArea[] = []
 interface ChartDataItem {
   label: string
   value: number
@@ -25,6 +35,7 @@ const canvasRef = ref<HTMLCanvasElement | null>(null)
 
 function drawChart() {
   const canvas = canvasRef.value
+  barAreas.length = 0
   if (!canvas) return
   const ctx = canvas.getContext('2d')
   if (!ctx) return
@@ -107,6 +118,14 @@ function drawChart() {
     ctx.lineTo(x1, padding.top + chartH)
     ctx.closePath()
     ctx.fill()
+    barAreas.push({
+      x: x1,
+      y: y1,
+      width: barWidth,
+      height: barH1,
+      label: item.label,
+      value: item.value,
+    })
 
     // Secondary bar
     if (hasSecondary && item.secondaryValue !== undefined) {
@@ -123,6 +142,14 @@ function drawChart() {
       ctx.lineTo(x2, padding.top + chartH)
       ctx.closePath()
       ctx.fill()
+      barAreas.push({
+        x: x2,
+        y: y2,
+        width: barWidth,
+        height: barH2,
+        label: item.label,
+        value: item.secondaryValue!,
+      })
     }
 
     // X-axis label
@@ -166,13 +193,43 @@ onMounted(() => {
     resizeObserver = new ResizeObserver(() => drawChart())
     resizeObserver.observe(canvasRef.value.parentElement!)
   }
+  canvasRef.value?.addEventListener('mousemove', handleMouseMove)
 })
 
 onBeforeUnmount(() => {
   resizeObserver?.disconnect()
+  canvasRef.value?.removeEventListener('mousemove', handleMouseMove)
 })
 
 watch(() => props.data, drawChart, { deep: true })
+const tooltip = ref({
+  show: false,
+  x: 0,
+  y: 0,
+  text: '',
+})
+function handleMouseMove(e: MouseEvent) {
+  const canvas = canvasRef.value
+  if (!canvas) return
+
+  const rect = canvas.getBoundingClientRect()
+  const x = e.clientX - rect.left
+  const y = e.clientY - rect.top
+
+  tooltip.value.show = false
+
+  for (const bar of barAreas) {
+    if (x >= bar.x && x <= bar.x + bar.width && y >= bar.y && y <= bar.y + bar.height) {
+      tooltip.value = {
+        show: true,
+        x,
+        y,
+        text: `${bar.label}: ${bar.value}`,
+      }
+      break
+    }
+  }
+}
 </script>
 
 <template>
@@ -180,6 +237,13 @@ watch(() => props.data, drawChart, { deep: true })
     <div class="chart-header">{{ title }}</div>
     <div class="chart-body">
       <canvas ref="canvasRef" class="chart-canvas"></canvas>
+      <div
+        v-if="tooltip.show"
+        class="chart-tooltip"
+        :style="{ left: tooltip.x + 'px', top: tooltip.y + 'px' }"
+      >
+        {{ tooltip.text }}
+      </div>
     </div>
   </div>
 </template>
@@ -201,9 +265,18 @@ watch(() => props.data, drawChart, { deep: true })
   font-weight: 600;
 }
 .chart-body {
-  flex: 1;
-  background: #ffffff;
-  padding: 12px;
+  position: relative;
+}
+
+.chart-tooltip {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.75);
+  color: white;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  pointer-events: none;
+  transform: translate(10px, -10px);
 }
 .chart-canvas {
   width: 100%;

@@ -1,13 +1,35 @@
 // server/server.js
-
+import cookieParser from 'cookie-parser'
+import cors from 'cors'
+import { register, login, logout } from './Controll/authController.js'
+import { verifyToken } from './authMiddleware.js'
 import express from 'express'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { uploadFile, deleteFile } from './uploadController.js'
 import { callPythonService } from './pythonService.js'
+import { testMail } from './Controll/mailControlTry.js'
 
 const app = express()
-const PORT = process.env.PORT || 3000
+//3.2新增：只允许5173的访问后端
+app.use(
+  cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+  }),
+)
+app.use(cookieParser()) //解析cookie
+app.use(express.json()) //解析JSON请求体
+const PORT = process.env.PORT || 3000 //指定后端端口为5173端口
+
+app.post('/api/register', register) //认证路由
+app.post('/api/login', login)
+app.post('/api/logout', logout)
+
+app.get('/api/me', verifyToken, (req, res) => {
+  //把登录后的id返回给前端
+  res.json({ userId: req.user.id })
+})
 /* ==============================
    路径解析
 ============================== */
@@ -17,7 +39,6 @@ const __dirname = path.dirname(__filename)
 const DIST_DIR = path.join(__dirname, '../dist')
 // Unity WebGL build 目录
 const UNITY_DIR = path.join(__dirname, '../dist/unity-build')
-app.use(express.json())
 //以下为路由测试
 app.get('/hello-test', (req, res) => {
   console.log('命中了 hello-test')
@@ -85,6 +106,7 @@ app.use('/api/history', async (req, res) => {
     res.status(500).json({ error: 'history proxy error' })
   }
 })
+app.post('/api/testMail', testMail) //给测试邮箱路径套上路由
 // 普通文件
 app.use(express.static(DIST_DIR))
 

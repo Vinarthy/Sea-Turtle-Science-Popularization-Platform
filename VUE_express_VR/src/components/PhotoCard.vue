@@ -2,6 +2,7 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import * as THREE from 'three'
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 const props = defineProps<{
   image: string
@@ -15,6 +16,7 @@ const containerRef = ref<HTMLDivElement | null>(null)
 let scene: THREE.Scene
 let camera: THREE.PerspectiveCamera
 let renderer: THREE.WebGLRenderer
+let controls: OrbitControls
 let animationId: number
 
 function init3D() {
@@ -30,6 +32,16 @@ function init3D() {
   camera.position.set(0, 1.5, 4)
 
   renderer = new THREE.WebGLRenderer({ antialias: true })
+  renderer.setSize(width, height)
+  containerRef.value.appendChild(renderer.domElement)
+
+  controls = new OrbitControls(camera, renderer.domElement)
+  controls.enableDamping = true
+  controls.dampingFactor = 0.05
+
+  controls.enablePan = false
+  controls.minDistance = 2
+  controls.maxDistance = 10
   renderer.setSize(width, height)
   containerRef.value.appendChild(renderer.domElement)
 
@@ -49,6 +61,7 @@ function init3D() {
 
 function animate() {
   animationId = requestAnimationFrame(animate)
+  controls.update()
   renderer.render(scene, camera)
 }
 
@@ -65,8 +78,13 @@ function destroy3D() {
   if (renderer) {
     renderer.dispose()
     renderer.domElement.remove()
-    cancelAnimationFrame(animationId)
   }
+
+  if (controls) {
+    controls.dispose()
+  }
+
+  cancelAnimationFrame(animationId)
 }
 
 onBeforeUnmount(destroy3D)
@@ -94,8 +112,14 @@ onBeforeUnmount(destroy3D)
   display: flex;
   flex-direction: column;
   gap: 10px;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
-
+.photo-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
+}
 .photo-img,
 .model-container {
   width: 100%;

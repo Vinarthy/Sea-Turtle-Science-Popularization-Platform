@@ -6,11 +6,17 @@ import AIPage from '@/pages/AIPage.vue'
 import HabitatPage from '@/pages/HabitatPage.vue'
 import PhotoPages from '@/pages/PhotoPages.vue'
 import ClassificationPage from '@/pages/ClassifyPage.vue'
+import AuthPage from '@/pages/AuthPage.vue'
+import mailtest from '@/pages/mailtest.vue'
 
 const routes = [
   {
     path: '/',
     component: HomePage,
+  },
+  {
+    path: '/auth',
+    component: AuthPage,
   },
   {
     path: '/vr',
@@ -32,9 +38,28 @@ const routes = [
     path: '/classification',
     component: ClassificationPage,
   },
+  {
+    path: '/mt',
+    component: mailtest,
+  },
 ]
 
-export default createRouter({
+const router = createRouter({
   history: createWebHistory(),
   routes,
 })
+
+/* 这是守卫代码 */
+router.beforeEach(async (to, from, next) => {
+  const res = await fetch('/api/me', {
+    credentials: 'include',
+  })
+
+  if (res.status === 401 && to.path !== '/auth') {
+    next('/auth')
+  } else {
+    next()
+  }
+})
+
+export default router
