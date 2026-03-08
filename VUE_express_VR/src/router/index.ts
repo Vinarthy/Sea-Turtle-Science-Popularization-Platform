@@ -8,6 +8,7 @@ import PhotoPages from '@/pages/PhotoPages.vue'
 import ClassificationPage from '@/pages/ClassifyPage.vue'
 import AuthPage from '@/pages/AuthPage.vue'
 import mailtest from '@/pages/mailtest.vue'
+import AboutPage from '@/pages/AboutPage.vue'
 
 const routes = [
   {
@@ -41,6 +42,10 @@ const routes = [
   {
     path: '/mt',
     component: mailtest,
+  },
+  {
+    path: '/about',
+    component: AboutPage,
   },
 ]
 

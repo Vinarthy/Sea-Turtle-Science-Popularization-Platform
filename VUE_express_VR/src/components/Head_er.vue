@@ -6,6 +6,7 @@
       <router-link to="/vr" class="nav-item">VR场景</router-link>
       <router-link to="/habitat" class="nav-item">海龟栖息地图谱</router-link>
       <router-link to="/ai" class="nav-item">海龟AI识别</router-link>
+      <router-link to="/about" class="nav-item">关于</router-link>
     </nav>
   </header>
 </template>
