@@ -107,6 +107,19 @@ app.use('/api/history', async (req, res) => {
   }
 })
 app.post('/api/testMail', testMail) //给测试邮箱路径套上路由
+
+//以下是视频展示模块
+app.get('/api/videos', (req, res) => {
+  res.json([
+    {
+      id: 1,
+      title: '海龟纪录片',
+      url: '/videos/webvideo.mp4',
+      description: '记录海龟的生命周期',
+    },
+  ])
+})
+app.use('/videos', express.static(path.join(__dirname, '../videos')))
 // 普通文件
 app.use(express.static(DIST_DIR))
 

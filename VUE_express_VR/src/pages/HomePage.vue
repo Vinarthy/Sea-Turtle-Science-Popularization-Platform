@@ -1,9 +1,11 @@
 <script lang="ts">
 import TurtleLifecycle from '@/components/TurtleLifecycle.vue'
+import VideoGallery from '@/components/VideoGallery.vue'
 export default {
   name: 'HomePage',
   components: {
     TurtleLifecycle,
+    VideoGallery,
   },
   data() {
     return {
@@ -91,6 +93,7 @@ export default {
     </div>
   </div>
   <TurtleLifecycle />
+  <VideoGallery />
 </template>
 
 <style scoped>
@@ -122,7 +125,7 @@ export default {
 }
 
 .annotation-title {
-  font-size: 22px;
+  font-size: 32px;
   font-weight: 700;
   color: #00264d;
   border-left: 4px solid #003366;

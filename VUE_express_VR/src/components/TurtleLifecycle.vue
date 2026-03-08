@@ -84,10 +84,25 @@ const turtleSpecies = [
     folder: '/lifecycle/green-turtle',
 
     stages: {
-      egg: { title: '卵期', description: '雌龟产下100-200枚卵' },
-      hatchling: { title: '幼年期', description: '幼龟奔向大海' },
-      juvenile: { title: '青年期', description: '成长10-20年' },
-      adult: { title: '成年期', description: '体长可达1.5米' },
+      egg: {
+        title: '卵期',
+        description:
+          '成年雌性海龟会回到自己出生的海滩，在夜间用后肢挖掘沙坑产卵，每次可产下90-180枚卵\n海龟的性别由孵化温度决定——温度较高时多孵化出雌性，温度较低时多孵化出雄性',
+      },
+      hatchling: {
+        title: '幼年期',
+        description:
+          '刚孵化的小海龟通常在夜间集体破沙而出，凭借本能朝着月光反射的海面方向爬行;这次爬行不仅锻炼肌肉，还会"印记"出生海滩的位置，为几十年后返乡繁殖奠定基础',
+      },
+      juvenile: {
+        title: '青年期',
+        description: '当海龟长到餐盘大小时，会从远洋迁移到营养丰富的近岸海域，建立觅食地并继续成长',
+      },
+      adult: {
+        title: '成年期',
+        description:
+          '成熟后，海龟会凭借"内置GPS"回到出生地附近海域交配，雌性再次上岸产卵，完成生命循环',
+      },
     },
 
     distribution: '绿海龟分布于全球热带海域',
@@ -99,10 +114,25 @@ const turtleSpecies = [
     folder: '/lifecycle/hawksbill',
 
     stages: {
-      egg: { title: '卵期', description: '每窝约140枚' },
-      hatchling: { title: '幼年期', description: '夜间出巢' },
-      juvenile: { title: '青年期', description: '生活在珊瑚礁' },
-      adult: { title: '成年期', description: '以鳞片闻名' },
+      egg: {
+        title: '卵期',
+        description:
+          '成年雌性海龟会回到自己出生的海滩，在夜间用后肢挖掘沙坑产卵，每次可产下90-180枚卵\n海龟的性别由孵化温度决定——温度较高时多孵化出雌性，温度较低时多孵化出雄性',
+      },
+      hatchling: {
+        title: '幼年期',
+        description:
+          '刚孵化的小海龟通常在夜间集体破沙而出，凭借本能朝着月光反射的海面方向爬行;这次爬行不仅锻炼肌肉，还会"印记"出生海滩的位置，为几十年后返乡繁殖奠定基础',
+      },
+      juvenile: {
+        title: '青年期',
+        description: '当海龟长到餐盘大小时，会从远洋迁移到营养丰富的近岸海域，建立觅食地并继续成长',
+      },
+      adult: {
+        title: '成年期',
+        description:
+          '成熟后，海龟会凭借"内置GPS"回到出生地附近海域交配，雌性再次上岸产卵，完成生命循环',
+      },
     },
 
     distribution: '玳瑁主要分布在热带珊瑚礁',
@@ -113,13 +143,28 @@ const turtleSpecies = [
     folder: '/lifecycle/Carettacaretta',
 
     stages: {
-      egg: { title: '卵期', description: '每窝约140枚' },
-      hatchling: { title: '幼年期', description: '夜间出巢' },
-      juvenile: { title: '青年期', description: '生活在珊瑚礁' },
-      adult: { title: '成年期', description: '以鳞片闻名' },
+      egg: {
+        title: '卵期',
+        description:
+          '成年雌性海龟会回到自己出生的海滩，在夜间用后肢挖掘沙坑产卵，每次可产下90-180枚卵\n海龟的性别由孵化温度决定——温度较高时多孵化出雌性，温度较低时多孵化出雄性',
+      },
+      hatchling: {
+        title: '幼年期',
+        description:
+          '刚孵化的小海龟通常在夜间集体破沙而出，凭借本能朝着月光反射的海面方向爬行;这次爬行不仅锻炼肌肉，还会"印记"出生海滩的位置，为几十年后返乡繁殖奠定基础',
+      },
+      juvenile: {
+        title: '青年期',
+        description: '当海龟长到餐盘大小时，会从远洋迁移到营养丰富的近岸海域，建立觅食地并继续成长',
+      },
+      adult: {
+        title: '成年期',
+        description:
+          '成熟后，海龟会凭借"内置GPS"回到出生地附近海域交配，雌性再次上岸产卵，完成生命循环',
+      },
     },
 
-    distribution: '红海龟主要分布在热带海域',
+    distribution: '红海龟主分布在温带—热带海域',
   },
   {
     id: 'Lepidochelysolivacea',
@@ -127,13 +172,28 @@ const turtleSpecies = [
     folder: '/lifecycle/Lepidochelysolivacea',
 
     stages: {
-      egg: { title: '卵期', description: '每窝约140枚' },
-      hatchling: { title: '幼年期', description: '夜间出巢' },
-      juvenile: { title: '青年期', description: '生活在珊瑚礁' },
-      adult: { title: '成年期', description: '以鳞片闻名' },
+      egg: {
+        title: '卵期',
+        description:
+          '成年雌性海龟会回到自己出生的海滩，在夜间用后肢挖掘沙坑产卵，每次可产下90-180枚卵\n海龟的性别由孵化温度决定——温度较高时多孵化出雌性，温度较低时多孵化出雄性',
+      },
+      hatchling: {
+        title: '幼年期',
+        description:
+          '刚孵化的小海龟通常在夜间集体破沙而出，凭借本能朝着月光反射的海面方向爬行;这次爬行不仅锻炼肌肉，还会"印记"出生海滩的位置，为几十年后返乡繁殖奠定基础',
+      },
+      juvenile: {
+        title: '青年期',
+        description: '当海龟长到餐盘大小时，会从远洋迁移到营养丰富的近岸海域，建立觅食地并继续成长',
+      },
+      adult: {
+        title: '成年期',
+        description:
+          '成熟后，海龟会凭借"内置GPS"回到出生地附近海域交配，雌性再次上岸产卵，完成生命循环',
+      },
     },
 
-    distribution: '太平洋丽龟主要分布在热带海域',
+    distribution: '太平洋丽龟分布在全球热带、亚热带海域',
   },
   {
     id: 'Lepidochelyskempii',
@@ -141,13 +201,28 @@ const turtleSpecies = [
     folder: '/lifecycle/Lepidochelyskempii',
 
     stages: {
-      egg: { title: '卵期', description: '每窝约140枚' },
-      hatchling: { title: '幼年期', description: '夜间出巢' },
-      juvenile: { title: '青年期', description: '生活在珊瑚礁' },
-      adult: { title: '成年期', description: '以鳞片闻名' },
+      egg: {
+        title: '卵期',
+        description:
+          '成年雌性海龟会回到自己出生的海滩，在夜间用后肢挖掘沙坑产卵，每次可产下90-180枚卵\n海龟的性别由孵化温度决定——温度较高时多孵化出雌性，温度较低时多孵化出雄性',
+      },
+      hatchling: {
+        title: '幼年期',
+        description:
+          '刚孵化的小海龟通常在夜间集体破沙而出，凭借本能朝着月光反射的海面方向爬行;这次爬行不仅锻炼肌肉，还会"印记"出生海滩的位置，为几十年后返乡繁殖奠定基础',
+      },
+      juvenile: {
+        title: '青年期',
+        description: '当海龟长到餐盘大小时，会从远洋迁移到营养丰富的近岸海域，建立觅食地并继续成长',
+      },
+      adult: {
+        title: '成年期',
+        description:
+          '成熟后，海龟会凭借"内置GPS"回到出生地附近海域交配，雌性再次上岸产卵，完成生命循环',
+      },
     },
 
-    distribution: '肯氏丽龟主要分布在热带海域',
+    distribution: '肯氏丽龟主要分布于墨西哥湾',
   },
   {
     id: 'Dermochelyscoriacea',
@@ -155,13 +230,28 @@ const turtleSpecies = [
     folder: '/lifecycle/Dermochelyscoriacea',
 
     stages: {
-      egg: { title: '卵期', description: '每窝约140枚' },
-      hatchling: { title: '幼年期', description: '夜间出巢' },
-      juvenile: { title: '青年期', description: '生活在珊瑚礁' },
-      adult: { title: '成年期', description: '以鳞片闻名' },
+      egg: {
+        title: '卵期',
+        description:
+          '成年雌性海龟会回到自己出生的海滩，在夜间用后肢挖掘沙坑产卵，每次可产下90-180枚卵\n海龟的性别由孵化温度决定——温度较高时多孵化出雌性，温度较低时多孵化出雄性',
+      },
+      hatchling: {
+        title: '幼年期',
+        description:
+          '刚孵化的小海龟通常在夜间集体破沙而出，凭借本能朝着月光反射的海面方向爬行;这次爬行不仅锻炼肌肉，还会"印记"出生海滩的位置，为几十年后返乡繁殖奠定基础',
+      },
+      juvenile: {
+        title: '青年期',
+        description: '当海龟长到餐盘大小时，会从远洋迁移到营养丰富的近岸海域，建立觅食地并继续成长',
+      },
+      adult: {
+        title: '成年期',
+        description:
+          '成熟后，海龟会凭借"内置GPS"回到出生地附近海域交配，雌性再次上岸产卵，完成生命循环',
+      },
     },
 
-    distribution: '棱皮龟主要分布在热带海域',
+    distribution: '棱皮龟广泛分布于全球',
   },
   {
     id: 'Natatordepressus',
@@ -169,13 +259,28 @@ const turtleSpecies = [
     folder: '/lifecycle/Natatordepressus',
 
     stages: {
-      egg: { title: '卵期', description: '每窝约140枚' },
-      hatchling: { title: '幼年期', description: '夜间出巢' },
-      juvenile: { title: '青年期', description: '生活在珊瑚礁' },
-      adult: { title: '成年期', description: '以鳞片闻名' },
+      egg: {
+        title: '卵期',
+        description:
+          '成年雌性海龟会回到自己出生的海滩，在夜间用后肢挖掘沙坑产卵，每次可产下90-180枚卵\n海龟的性别由孵化温度决定——温度较高时多孵化出雌性，温度较低时多孵化出雄性',
+      },
+      hatchling: {
+        title: '幼年期',
+        description:
+          '刚孵化的小海龟通常在夜间集体破沙而出，凭借本能朝着月光反射的海面方向爬行;这次爬行不仅锻炼肌肉，还会"印记"出生海滩的位置，为几十年后返乡繁殖奠定基础',
+      },
+      juvenile: {
+        title: '青年期',
+        description: '当海龟长到餐盘大小时，会从远洋迁移到营养丰富的近岸海域，建立觅食地并继续成长',
+      },
+      adult: {
+        title: '成年期',
+        description:
+          '成熟后，海龟会凭借"内置GPS"回到出生地附近海域交配，雌性再次上岸产卵，完成生命循环',
+      },
     },
 
-    distribution: '平背龟主要分布在热带海域',
+    distribution: '平背龟仅分布于澳大利亚北部沿海，为地区特有种',
   },
 ]
 
@@ -248,7 +353,8 @@ const selectedSpecies = ref(turtleSpecies[0])
 }
 
 .distribution img {
-  width: 260px;
+  width: 500px;
+  height: auto;
   border-radius: 12px;
   border: 4px solid #0077b6;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
@@ -256,7 +362,8 @@ const selectedSpecies = ref(turtleSpecies[0])
 
 .dist-text {
   margin-top: 10px;
-  max-width: 280px;
+  /* max-width: 280px; */
+  text-align: center;
 }
 
 .bottom-tip {
