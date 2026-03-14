@@ -116,7 +116,7 @@ const migrationData = [
   align-items: center;
   justify-content: center;
   gap: 8px;
-  width: 100%;
+  width: 96%;
   padding: 12px 24px;
   border-radius: 6px;
   background-color: #b0bec5;
@@ -127,7 +127,7 @@ const migrationData = [
   transition: opacity 0.2s;
 }
 .link-bar:hover {
-  opacity: 0.88;
+  opacity: 0.8;
 }
 
 /* 地图 */
