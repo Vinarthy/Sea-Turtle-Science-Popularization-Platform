@@ -9,6 +9,7 @@ import { fileURLToPath } from 'url'
 import { uploadFile, deleteFile } from './uploadController.js'
 import { callPythonService } from './pythonService.js'
 import { testMail } from './Controll/mailControlTry.js'
+import articleRoutes from './articleRoutes.js'
 
 const app = express()
 //3.2新增：只允许5173的访问后端
@@ -120,6 +121,8 @@ app.get('/api/videos', (req, res) => {
   ])
 })
 app.use('/videos', express.static(path.join(__dirname, '../videos')))
+app.use('/api/articles', articleRoutes) //将文章模块加上路由
+app.use('/article', express.static(path.join(__dirname, './public/article'))) //配置后端public文件
 // 普通文件
 app.use(express.static(DIST_DIR))
 

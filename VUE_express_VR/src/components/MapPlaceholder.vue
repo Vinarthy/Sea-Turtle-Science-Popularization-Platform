@@ -8,8 +8,8 @@
         海龟目击点分布
       </label>
       <br />
-      海龟巢穴分布数据：
       <br />
+      海龟巢穴分布数据：
       <div style="margin-top: 10px">
         <label class="checkbox">
           <input type="checkbox" v-model="showCaretta" @change="toggleCaretta" />

@@ -9,6 +9,8 @@ import ClassificationPage from '@/pages/ClassifyPage.vue'
 import AuthPage from '@/pages/AuthPage.vue'
 import mailtest from '@/pages/mailtest.vue'
 import AboutPage from '@/pages/AboutPage.vue'
+import ProtectPage from '@/pages/ProtectionPage.vue'
+import ArticleDetail from '@/pages/ArticleDetail.vue' //增加文章
 
 const routes = [
   {
@@ -46,6 +48,14 @@ const routes = [
   {
     path: '/about',
     component: AboutPage,
+  },
+  {
+    path: '/protect',
+    component: ProtectPage,
+  },
+  {
+    path: '/article/:id',
+    component: ArticleDetail,
   },
 ]
 
