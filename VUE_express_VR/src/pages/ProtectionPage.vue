@@ -112,7 +112,7 @@ onMounted(() => {
 
 .article-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, 260px);
+  grid-template-columns: repeat(auto-fill, 300px);
   gap: 30px;
   justify-content: center;
 }

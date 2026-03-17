@@ -145,9 +145,12 @@ onMounted(loadArticle)
 }
 
 .content img {
+  max-width: 600px;
   width: 100%;
-  margin: 20px 0;
+  height: auto;
+  margin: 20px auto;
   border-radius: 10px;
+  display: block;
 }
 
 .content p {
