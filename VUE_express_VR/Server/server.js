@@ -123,6 +123,16 @@ app.get('/api/videos', (req, res) => {
 app.use('/videos', express.static(path.join(__dirname, '../videos')))
 app.use('/api/articles', articleRoutes) //将文章模块加上路由
 app.use('/article', express.static(path.join(__dirname, './public/article'))) //配置后端public文件
+
+// 图片接口
+app.get('/api/updateturtle', (req, res) => {
+  res.json([
+    { id: 1, url: '/updateturtle/Cinderella.gif' },
+    { id: 2, url: '/updateturtle/Mabel.gif' },
+    { id: 3, url: '/updateturtle/Martha.gif' },
+  ])
+})
+app.use('/updateturtle', express.static(path.join(__dirname, './public/updateturtle')))
 // 普通文件
 app.use(express.static(DIST_DIR))
 

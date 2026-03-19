@@ -2,6 +2,9 @@
 import BarChartCard from '@/components/BarChartCard.vue'
 import MapPlaceholder from '@/components/MapPlaceholder.vue'
 import EChartsTable from '@/components/EChartsTable.vue'
+import PieAnalysis from '@/components/PieAnalysis.vue'
+import ImageSwitcher from '@/components/ImageSwitcher.vue'
+import LineChartsPanel from '@/components/LineChartsPanel.vue'
 
 const populationData = [
   { label: '绿海龟', value: 4.7, secondaryValue: 95 },
@@ -47,7 +50,7 @@ const turtleRRVData = [
     desc: '早期生态价值低',
   },
   {
-    stage: '狂躁期',
+    stage: '过渡期',
     region: '近岸区域',
     value: 0.004,
     desc: '过渡阶段短暂',
@@ -139,6 +142,14 @@ const turtleRRVData = [
         <!--新增echarts表格区域-->
         <EChartsTable title="海龟生命周期 RRV 权重分布" :data="turtleRRVData" />
       </div>
+      <div class="analysis-row">
+        <!-- 左：饼图 -->
+        <PieAnalysis />
+        <!-- 中：图片切换 -->
+        <ImageSwitcher />
+        <!-- 右：折线图 -->
+        <LineChartsPanel />
+      </div>
     </main>
   </div>
 </template>
@@ -201,6 +212,17 @@ const turtleRRVData = [
 }
 @media (max-width: 900px) {
   .charts-row {
+    grid-template-columns: 1fr;
+  }
+}
+.analysis-row {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1.5fr;
+  gap: 16px;
+}
+
+@media (max-width: 900px) {
+  .analysis-row {
     grid-template-columns: 1fr;
   }
 }
