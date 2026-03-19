@@ -2,7 +2,7 @@
   <header class="header">
     <nav class="nav-container">
       <router-link to="/" class="nav-item">首页</router-link>
-      <router-link to="/photo" class="nav-item">海龟模型及照片</router-link>
+      <router-link to="/photo" class="nav-item">海龟详情展示</router-link>
       <router-link to="/vr" class="nav-item">VR场景</router-link>
       <router-link to="/habitat" class="nav-item">海龟栖息地图谱</router-link>
       <router-link to="/protect" class="nav-item">海龟与保护</router-link>

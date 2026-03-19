@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import BarChartCard from '@/components/BarChartCard.vue'
 import MapPlaceholder from '@/components/MapPlaceholder.vue'
+import EChartsTable from '@/components/EChartsTable.vue'
 
 const populationData = [
   { label: '绿海龟', value: 4.7, secondaryValue: 95 },
@@ -24,6 +25,13 @@ const migrationData = [
   { label: '红海中南部', value: 1300 },
   { label: '南海', value: 1942 },
   { label: '​西南佛罗里达', value: 748.8 },
+]
+
+const tablePopulationData = [
+  //晚上就把这玩意改成后端传上来的
+  { species: '绿海龟', juvenile: 4.7, adult: 95 },
+  { species: '红海龟', juvenile: 4.5, adult: 92 },
+  { species: '玳瑁', juvenile: 4.3, adult: 85 },
 ]
 </script>
 
@@ -80,6 +88,19 @@ const migrationData = [
           title="数据表 3 - 不同海域海龟迁徙距离（单位：km）"
           :data="migrationData"
           color="#1e3a5f"
+        />
+      </div>
+
+      <div class="table-area">
+        <!--新增echarts表格区域-->
+        <EChartsTable
+          title="表格 1 - 海龟体长详细数据"
+          :columns="[
+            { label: '物种', key: 'species' },
+            { label: '幼体(cm)', key: 'juvenile' },
+            { label: '成体(cm)', key: 'adult' },
+          ]"
+          :data="tablePopulationData"
         />
       </div>
     </main>
