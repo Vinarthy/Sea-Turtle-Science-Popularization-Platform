@@ -27,11 +27,55 @@ const migrationData = [
   { label: '​西南佛罗里达', value: 748.8 },
 ]
 
-const tablePopulationData = [
-  //晚上就把这玩意改成后端传上来的
-  { species: '绿海龟', juvenile: 4.7, adult: 95 },
-  { species: '红海龟', juvenile: 4.5, adult: 92 },
-  { species: '玳瑁', juvenile: 4.3, adult: 85 },
+const turtleRRVData = [
+  {
+    stage: '产卵雌龟',
+    region: '陆地区域',
+    value: 1.0,
+    desc: '最高权重 —— 直接决定种群繁殖能力',
+  },
+  {
+    stage: '卵',
+    region: '陆地区域',
+    value: 0.004,
+    desc: '自然死亡率极高',
+  },
+  {
+    stage: '初孵幼体',
+    region: '陆地区域',
+    value: 0.004,
+    desc: '早期生态价值低',
+  },
+  {
+    stage: '狂躁期',
+    region: '近岸区域',
+    value: 0.004,
+    desc: '过渡阶段短暂',
+  },
+  {
+    stage: '幼体',
+    region: '远洋区域',
+    value: 0.029,
+    desc: '存活不确定性高',
+  },
+  {
+    stage: '成体',
+    region: '远洋区域',
+    value: 0.789,
+    desc: '关键繁殖个体',
+  },
+  {
+    stage: '幼体',
+    region: '近岸区域',
+    value: 0.235,
+    desc: '未来繁殖主力',
+  },
+  {
+    stage: '成体',
+    region: '近岸区域',
+    value: 0.789,
+    desc: '可繁殖个体',
+  },
 ]
 </script>
 
@@ -93,15 +137,7 @@ const tablePopulationData = [
 
       <div class="table-area">
         <!--新增echarts表格区域-->
-        <EChartsTable
-          title="表格 1 - 海龟体长详细数据"
-          :columns="[
-            { label: '物种', key: 'species' },
-            { label: '幼体(cm)', key: 'juvenile' },
-            { label: '成体(cm)', key: 'adult' },
-          ]"
-          :data="tablePopulationData"
-        />
+        <EChartsTable title="海龟生命周期 RRV 权重分布" :data="turtleRRVData" />
       </div>
     </main>
   </div>

@@ -2,16 +2,15 @@
 import { ref, onMounted, watch } from 'vue'
 import * as echarts from 'echarts'
 
-interface Column {
-  label: string
-  key: string
+type RowData = {
+  stage: string
+  region: string
+  value: number
+  desc: string
 }
-
-type RowData = Record<string, any>
 
 const props = defineProps<{
   title: string
-  columns: Column[]
   data: RowData[]
 }>()
 
@@ -19,10 +18,9 @@ const chartRef = ref<HTMLElement | null>(null)
 let chart: echarts.ECharts | null = null
 
 const renderChart = () => {
-  if (!chart || !props.data || props.data.length === 0) return
+  if (!chart || props.data.length === 0) return
 
-  // x轴：物种
-  const xData = props.data.map((row) => row.species)
+  const xData = props.data.map((d) => `${d.stage}\n(${d.region})`)
 
   const option: echarts.EChartsOption = {
     title: {
@@ -32,45 +30,46 @@ const renderChart = () => {
 
     tooltip: {
       trigger: 'axis',
-    },
-
-    legend: {
-      data: ['幼体', '成体'],
-      top: 30,
+      formatter: (params: any) => {
+        const i = params[0].dataIndex
+        const d = props.data[i]
+        return `
+          <b>${d.stage}</b><br/>
+          区域：${d.region}<br/>
+          权重：${d.value}<br/>
+          <span style="color:#888">${d.desc}</span>
+        `
+      },
     },
 
     grid: {
       top: 80,
       left: 50,
       right: 20,
-      bottom: 40,
+      bottom: 40, // 调整底部间距，因为去掉了滑块
     },
 
     xAxis: {
       type: 'category',
       data: xData,
+      axisLabel: {
+        interval: 0,
+      },
     },
 
     yAxis: {
       type: 'value',
-      name: 'cm',
+      name: 'RRV',
     },
 
     series: [
       {
-        name: '幼体',
         type: 'bar',
-        data: props.data.map((row) => row.juvenile),
+        data: props.data.map((d) => d.value),
+        barWidth: 30,
         itemStyle: {
-          color: '#4a90c4',
-        },
-      },
-      {
-        name: '成体',
-        type: 'bar',
-        data: props.data.map((row) => row.adult),
-        itemStyle: {
-          color: '#1e3a5f',
+          color: '#5470c6',
+          opacity: 1, // 正常不透明度。
         },
       },
     ],
@@ -92,6 +91,7 @@ watch(() => props.data, renderChart, { deep: true })
 <template>
   <div class="card">
     <div ref="chartRef" style="height: 320px"></div>
+    <!-- 滑块已移除 -->
   </div>
 </template>
 
