@@ -17,23 +17,29 @@ init_db()
 # 英文 → 中文映射
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
+from fastapi.concurrency import run_in_threadpool
 @app.post("/detect")
 async def detect_image(image: UploadFile = File(...)):
     contents = await image.read()
-    # 保存原图
+
     raw_filename = f"{uuid.uuid4()}.jpg"
     raw_path = os.path.join(UPLOAD_DIR, raw_filename)
+
     with open(raw_path, "wb") as f:
         f.write(contents)
-    # 调用 YOLO 推理
-    result_filename, detections = detect_and_save(raw_path)
-    if detections:
-        first = detections[0]
 
-        insert_record(
-            class_name=first["label"],
-            confidence=first["confidence"],
-            result_img_path=f"/uploads/{result_filename}"
+    result_filename, detections = detect_and_save(raw_path)
+
+    if detections:
+        await run_in_threadpool(
+            lambda: [
+                insert_record(
+                    det["label"],
+                    det["confidence"],
+                    f"/uploads/{result_filename}"
+                )
+                for det in detections
+            ]
         )
 
     return {

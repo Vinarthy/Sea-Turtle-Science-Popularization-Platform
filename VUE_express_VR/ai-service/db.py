@@ -1,27 +1,29 @@
-import sqlite3
-import os
+import mysql.connector
 from datetime import datetime
 
-DATABASE = "turtle_ai.db"
+DB_CONFIG = {
+    "host": "localhost",
+    "user": "root",
+    "password": "720053",
+    "database": "turtle_app"
+}
 
 
-def get_connection():
-    conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row
-    return conn
+def get_connection():  # 建立连接
+    return mysql.connector.connect(**DB_CONFIG)
 
 
-def init_db():
+def init_db():  # 初始化表
     conn = get_connection()
     c = conn.cursor()
 
     c.execute("""
         CREATE TABLE IF NOT EXISTS detection_history (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            detect_time TEXT NOT NULL,
-            class_name TEXT NOT NULL,
-            confidence REAL NOT NULL,
-            result_img_path TEXT NOT NULL
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            detect_time DATETIME NOT NULL,
+            class_name VARCHAR(255) NOT NULL,
+            confidence FLOAT NOT NULL,
+            result_img_path VARCHAR(500) NOT NULL
         )
     """)
 
@@ -29,16 +31,16 @@ def init_db():
     conn.close()
 
 
-def insert_record(class_name, confidence, result_img_path):
+def insert_record(class_name, confidence, result_img_path):  # 插入记录
     conn = get_connection()
     c = conn.cursor()
 
     c.execute("""
         INSERT INTO detection_history
         (detect_time, class_name, confidence, result_img_path)
-        VALUES (?, ?, ?, ?)
+        VALUES (%s, %s, %s, %s)
     """, (
-        datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        datetime.now(),
         class_name,
         confidence,
         result_img_path
@@ -48,17 +50,17 @@ def insert_record(class_name, confidence, result_img_path):
     conn.close()
 
 
-def get_latest_records(limit=10):
+def get_latest_records(limit=10):  # 查询最新记录
     conn = get_connection()
-    c = conn.cursor()
+    c = conn.cursor(dictionary=True)
 
     c.execute("""
         SELECT * FROM detection_history
         ORDER BY detect_time DESC
-        LIMIT ?
+        LIMIT %s
     """, (limit,))
 
-    rows = [dict(row) for row in c.fetchall()]
+    rows = c.fetchall()
     conn.close()
     return rows
 #db里面有东西了但是没传进前端
