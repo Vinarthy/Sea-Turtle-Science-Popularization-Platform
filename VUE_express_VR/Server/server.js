@@ -39,7 +39,7 @@ const __dirname = path.dirname(__filename)
 // Vue build 输出目录
 const DIST_DIR = path.join(__dirname, '../dist')
 // Unity WebGL build 目录
-const UNITY_DIR = path.join(__dirname, '../dist/unity-build')
+const UNITY_DIR = path.join(__dirname, './public/unity-build')
 //以下为路由测试
 app.get('/hello-test', (req, res) => {
   console.log('命中了 hello-test')
@@ -71,29 +71,27 @@ app.post('/api/detect', uploadFile, async (req, res) => {
 app.use(
   '/unity-build',
   express.static(UNITY_DIR, {
-    setHeaders: (res, filePath) => {
-      if (filePath.endsWith('.gz')) {
-        res.setHeader('Content-Encoding', 'gzip')
+    setHeaders: (res, path) => {
+      // path 是文件全路径
+      if (path.endsWith('.gz')) {
+        res.set('Content-Encoding', 'gzip')
+      }
+      if (path.endsWith('.br')) {
+        res.set('Content-Encoding', 'br')
       }
 
-      if (filePath.endsWith('.br')) {
-        res.setHeader('Content-Encoding', 'br')
+      // 统一处理 Content-Type（更稳）
+      if (path.match(/\.js(\.gz|\.br)?$/)) {
+        res.set('Content-Type', 'application/javascript')
+      }
+      if (path.match(/\.wasm(\.gz|\.br)?$/)) {
+        res.set('Content-Type', 'application/wasm')
+      }
+      if (path.match(/\.data(\.gz|\.br)?$/)) {
+        res.set('Content-Type', 'application/octet-stream')
       }
 
-      if (filePath.endsWith('.js')) {
-        res.setHeader('Content-Type', 'application/javascript')
-      }
-
-      if (filePath.endsWith('.wasm')) {
-        res.setHeader('Content-Type', 'application/wasm')
-      }
-
-      if (filePath.endsWith('.data')) {
-        res.setHeader('Content-Type', 'application/octet-stream')
-      }
-
-      // 禁用缓存，避免304缓存脏数据
-      res.setHeader('Cache-Control', 'no-store')
+      res.set('Cache-Control', 'no-store, must-revalidate')
     },
   }),
 )

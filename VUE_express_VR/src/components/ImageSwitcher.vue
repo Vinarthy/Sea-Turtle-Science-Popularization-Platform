@@ -8,7 +8,7 @@ const current = ref(0)
 const turtleNames = ['Cinderella', 'Mabel', 'Martha']
 
 onMounted(async () => {
-  const res = await fetch('http://localhost:3000/api/updateturtle')
+  const res = await fetch('/api/updateturtle')
   const data = await res.json()
   images.value = data.map((item: any) => item.url)
 })
