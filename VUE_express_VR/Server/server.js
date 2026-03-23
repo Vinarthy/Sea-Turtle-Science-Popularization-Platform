@@ -115,7 +115,7 @@ app.get('/api/videos', (req, res) => {
     {
       id: 1,
       title: '海龟纪录片',
-      url: '/videos/webvideo.mp4',
+      url: 'http://localhost:8080/videos/webvideo.mp4',
       description: '记录海龟的生命周期',
     },
   ])
