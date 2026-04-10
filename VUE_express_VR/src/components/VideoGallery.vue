@@ -83,5 +83,5 @@ onMounted(loadVideos)
 .video-info p {
   font-size: 14px;
   color: #666;
-}
+} /* 妈的为什么我的代码可读性那么差我好想死（ */
 </style>

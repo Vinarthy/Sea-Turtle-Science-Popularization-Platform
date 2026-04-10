@@ -52,20 +52,94 @@ export default {
       ],
 
       currentIndex: 0,
+      timer: null as number | null,
+      isDragging: false,
+      startX: 0,
+      moveX: 0,
     }
   },
   computed: {
-    // 计算当前显示的文案
     currentAnnotations() {
       return this.annotations[this.currentIndex] || { title: '', texts: [] }
     },
   },
+
+  mounted() {
+    this.preloadImages()
+    this.startAutoPlay()
+  },
+
+  beforeUnmount() {
+    this.stopAutoPlay()
+  },
+
   methods: {
+    preloadImages() {
+      this.images.forEach((src) => {
+        const img = new Image()
+        img.src = src
+      })
+    },
+
+    // ⭐ 多层位置判断
+    getImageClass(index: number) {
+      const len = this.images.length
+      const diff = (index - this.currentIndex + len) % len
+
+      if (diff === 0) return 'active'
+      if (diff === 1) return 'next'
+      if (diff === 2) return 'next2'
+      if (diff === len - 1) return 'prev'
+      if (diff === len - 2) return 'prev2'
+
+      return 'hidden'
+    },
+
     prevImage() {
       this.currentIndex = (this.currentIndex - 1 + this.images.length) % this.images.length
     },
+
     nextImage() {
       this.currentIndex = (this.currentIndex + 1) % this.images.length
+    },
+
+    startAutoPlay() {
+      this.timer = setInterval(() => {
+        this.nextImage()
+      }, 3000)
+    },
+
+    stopAutoPlay() {
+      if (this.timer) {
+        clearInterval(this.timer)
+        this.timer = null
+      }
+    },
+
+    handleStart(e: MouseEvent | TouchEvent) {
+      this.stopAutoPlay()
+
+      this.isDragging = true
+      this.startX = 'touches' in e ? e.touches[0].clientX : e.clientX
+    },
+
+    handleMove(e: MouseEvent | TouchEvent) {
+      if (!this.isDragging) return
+    },
+
+    handleEnd() {
+      if (!this.isDragging) return
+
+      const diff = this.moveX - this.startX
+
+      if (diff > 50) {
+        this.prevImage()
+      } else if (diff < -50) {
+        this.nextImage()
+      }
+
+      this.isDragging = false
+      this.startAutoPlay()
     },
   },
 }
@@ -73,6 +147,7 @@ export default {
 <template>
   <div class="home-page">
     <div class="content-wrapper">
+      <!-- 文案 -->
       <div class="annotations">
         <h2 class="annotation-title">{{ currentAnnotations.title }}</h2>
 
@@ -82,16 +157,32 @@ export default {
         </div>
       </div>
 
-      <div class="main-image-container">
-        <img class="main-image" :src="images[currentIndex]" alt="图片展示" />
-
-        <div class="nav-arrows">
-          <button class="arrow-button prev" @click="prevImage">‹</button>
-          <button class="arrow-button next" @click="nextImage">›</button>
+      <!-- 图片堆叠 -->
+      <div
+        class="main-image-container"
+        @mousedown="handleStart"
+        @mousemove="handleMove"
+        @mouseup="handleEnd"
+        @mouseleave="handleEnd"
+        @touchstart="handleStart"
+        @touchmove="handleMove"
+        @touchend="handleEnd"
+      >
+        <div class="image-stack">
+          <img
+            v-for="(img, index) in images"
+            :key="index"
+            :src="img"
+            class="stack-image"
+            :class="getImageClass(index)"
+          />
+          <p class="image-hint">点击切换图片</p>
         </div>
+        <div class="nav-arrows"></div>
       </div>
     </div>
   </div>
+
   <TurtleLifecycle />
   <VideoGallery />
 </template>
@@ -109,106 +200,120 @@ export default {
 .content-wrapper {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  height: 100%;
-  gap: 40px;
-  position: relative;
+  justify-content: center;
+  gap: 60px;
 }
 
+/* 文案 */
 .annotations {
-  flex: 0 0 350px; /*容器大小*/
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 0 20px 0 95px; /*位置调整*/
+  width: 350px;
 }
 
 .annotation-title {
-  font-size: 32px;
-  font-weight: 700;
-  color: #00264d;
-  border-left: 4px solid #003366;
-  padding-left: 8px;
-  margin-bottom: 10px;
+  font-size: 28px;
+  margin-bottom: 15px;
 }
 
 .annotation-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 6px;
+  margin-bottom: 10px;
 }
 
-.annotation-text {
-  font-size: 18px;
-  color: #333;
-  font-weight: 500;
-  writing-mode: horizontal-tb;
-}
-
-.annotation-arrow {
-  font-size: 24px;
-  color: #003366;
-  font-weight: bold;
-}
-
+/* ⭐ 轮播容器 */
 .main-image-container {
-  max-width: 750px; /* 上限，避免超大 */
-  height: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  --offset-x: -50px; /*下面是qwq的调位置*/
-  --offset-y: 0px;
-  transform: translate(var(--offset-x), var(--offset-y));
-  transition: transform 0.18s ease;
-  background-color: #add8e6;
+  width: 750px;
+  height: 450px;
+  position: relative;
+  perspective: 1200px;
+  overflow: hidden;
 }
 
-.main-image {
+.image-stack {
   width: 100%;
-  height: auto;
-  object-fit: contain;
+  height: 100%;
+  position: relative;
 }
 
+.stack-image {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  width: 520px;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 12px;
+
+  transform: translate(-50%, -50%) scale(0.5);
+  transition: all 0.5s ease;
+
+  opacity: 0;
+}
+
+/* 中间 */
+.stack-image.active {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  z-index: 5;
+}
+
+/* 第一层 */
+.stack-image.prev {
+  transform: translate(-120%, -50%) scale(0.75) rotateY(25deg);
+  opacity: 0.5;
+  z-index: 4;
+}
+
+.stack-image.next {
+  transform: translate(20%, -50%) scale(0.75) rotateY(-25deg);
+  opacity: 0.5;
+  z-index: 4;
+}
+
+/* 第二层 */
+.stack-image.prev2 {
+  transform: translate(-200%, -50%) scale(0.6) rotateY(35deg);
+  opacity: 0.3;
+  z-index: 3;
+}
+
+.stack-image.next2 {
+  transform: translate(100%, -50%) scale(0.6) rotateY(-35deg);
+  opacity: 0.3;
+  z-index: 3;
+}
+
+.stack-image.hidden {
+  opacity: 0;
+}
+
+/* 按钮 */
 .nav-arrows {
   position: absolute;
   top: 50%;
-  transform: translateY(-50%);
-  left: 20px;
-  right: 20px;
+  width: 100%;
   display: flex;
   justify-content: space-between;
-  width: calc(100% - 40px);
-  pointer-events: none;
+  transform: translateY(-50%);
 }
 
 .arrow-button {
-  width: 35px;
-  height: 80px;
-  background-color: #003366;
+  width: 40px;
+  height: 60px;
+  background: #003366;
   color: white;
   border: none;
-  border-radius: 4px;
-  font-size: 28px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.3s ease;
-  pointer-events: auto;
 }
-
-.arrow-button:hover {
-  background-color: #004c99;
-}
-
-.arrow-button.prev {
-  margin-left: -70px;
-}
-
-.arrow-button.next {
-  margin-right: -70px;
+.image-hint {
+  text-align: center;
+  margin-top: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #004080; /* 深蓝色，与海洋保护主题呼应 */
+  background: rgba(255, 255, 255, 0.8); /* 半透明白底，保证可读性 */
+  padding: 6px 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 64, 128, 0.2); /* 柔和阴影 */
+  transition: all 0.3s ease;
 }
 </style>
