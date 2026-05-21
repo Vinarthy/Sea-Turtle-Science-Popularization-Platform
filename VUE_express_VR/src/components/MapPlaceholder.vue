@@ -7,54 +7,18 @@
         <input type="checkbox" v-model="showLayer" @change="toggleDistribution" />
         海龟目击点分布
       </label>
-      <br />
-      <br />
+
+      <br /><br />
+
       海龟巢穴分布数据：
       <div style="margin-top: 10px">
-        <label class="checkbox">
-          <input type="checkbox" v-model="showCaretta" @change="toggleCaretta" />
-          <span style="color: #e74c3c">●</span> 红海龟
+        <label v-for="(v, key) in speciesSwitch" :key="key" class="checkbox">
+          <input type="checkbox" v-model="speciesSwitch[key]" @change="updateVisible" />
+          <span :style="{ color: speciesColorMap[key] }">●</span> {{ speciesNameMap[key] }}
         </label>
-
-        <br />
-
-        <label class="checkbox">
-          <input type="checkbox" v-model="showGreen" @change="toggleGreen" />
-          <span style="color: #27ae60">●</span> 绿海龟
-        </label>
-
-        <br />
-
-        <label class="checkbox">
-          <input type="checkbox" v-model="showOlive" @change="toggleOlive" />
-          <span style="color: #f39c12">●</span> 太平洋丽龟
-        </label>
-
-        <br />
-
-        <label class="checkbox">
-          <input type="checkbox" v-model="showLeather" @change="toggleLeather" />
-          <span style="color: #8e44ad">●</span> 棱皮龟
-        </label>
-        <br />
-        <label class="checkbox">
-          <input type="checkbox" v-model="showHawksbill" @change="toggleHawksbill" />
-          <span style="color: #c7d531">●</span> 玳瑁龟
-        </label>
-        <br />
-        <label class="checkbox">
-          <input type="checkbox" v-model="showFlatback" @change="toggleFlatback" />
-          <span style="color: #34f1cb">●</span> 平背龟
-        </label>
-        <br />
-        <label class="checkbox">
-          <input type="checkbox" v-model="showKemp" @change="toggleKemp" />
-          <span style="color: #f494f5">●</span> 肯氏丽龟
-        </label>
-
-        <br />
       </div>
-      <p class="desc">这些坐标点记录了全球范围内的海龟目击事件及巢穴分布，数据源于SWOT网站。</p>
+
+      <p class="desc">全球海龟目击与巢穴数据（SWOT）</p>
     </div>
   </div>
 </template>
@@ -65,27 +29,108 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
 const map = ref<L.Map>()
-const showLayer = ref(true) //这个是指分布格网的显示
-const showSpecies = ref(true) //这个是指物种点的显示
-//根据物种选择
-const showCaretta = ref(true)
-const showGreen = ref(true)
-const showOlive = ref(true)
-const showLeather = ref(true)
-const showHawksbill = ref(true)
-const showFlatback = ref(true)
-const showKemp = ref(true)
-//选择不同物种
+
+const showLayer = ref(true)
+
+// 物种开关（统一管理）
+const speciesSwitch = ref<Record<string, boolean>>({
+  Carettacaretta: true,
+  GreenSeaTurtle: true,
+  OliveRidley: true,
+  Leatherback: true,
+  Hawksbill: true,
+  Flatback: true,
+  LepidochelysKempii: true,
+})
+
+const speciesNameMap: Record<string, string> = {
+  Carettacaretta: '红海龟',
+  GreenSeaTurtle: '绿海龟',
+  OliveRidley: '太平洋丽龟',
+  Leatherback: '棱皮龟',
+  Hawksbill: '玳瑁龟',
+  Flatback: '平背龟',
+  LepidochelysKempii: '肯氏丽龟',
+}
+
+const speciesColorMap: Record<string, string> = {
+  Carettacaretta: '#e74c3c',
+  GreenSeaTurtle: '#27ae60',
+  OliveRidley: '#f39c12',
+  Leatherback: '#8e44ad',
+  Hawksbill: '#c7d531',
+  Flatback: '#34f1cb',
+  LepidochelysKempii: '#f494f5',
+}
 
 const distributionLayer = ref<L.GeoJSON>()
 const speciesLayer = ref<L.LayerGroup>(L.layerGroup())
-const carettaLayer = ref<L.LayerGroup>(L.layerGroup())
-const greenLayer = ref<L.LayerGroup>(L.layerGroup())
-const oliveLayer = ref<L.LayerGroup>(L.layerGroup())
-const leatherLayer = ref<L.LayerGroup>(L.layerGroup())
-const hawksbillLayer = ref<L.LayerGroup>(L.layerGroup())
-const flatbackLayer = ref<L.LayerGroup>(L.layerGroup())
-const kempLayer = ref<L.LayerGroup>(L.layerGroup())
+
+let rawData: any[] = []
+let loaded = false
+
+function chunkLoad(features: any[], chunkSize = 200) {
+  let index = 0
+
+  function loadChunk() {
+    const end = Math.min(index + chunkSize, features.length)
+
+    for (let i = index; i < end; i++) {
+      const f = features[i]
+      const name = f.properties.name
+      const color = speciesColorMap[name] || '#999'
+
+      const marker = L.circleMarker([f.geometry.coordinates[1], f.geometry.coordinates[0]], {
+        radius: 5,
+        color,
+        fillColor: color,
+        fillOpacity: 0.8,
+      })
+
+      // ✅ 关键：给 marker 挂物种信息
+      ;(marker as any).species = name
+
+      marker.bindPopup(`<b>${f.properties.common_name || '未知'}</b>`)
+
+      speciesLayer.value.addLayer(marker)
+    }
+
+    index = end
+    if (index < features.length) requestAnimationFrame(loadChunk)
+  }
+
+  loadChunk()
+}
+
+function updateVisible() {
+  speciesLayer.value.eachLayer((layer: any) => {
+    const name = layer.species
+
+    if (speciesSwitch.value[name]) {
+      layer.setStyle({
+        opacity: 1,
+        fillOpacity: 0.8,
+      })
+    } else {
+      layer.setStyle({
+        opacity: 0,
+        fillOpacity: 0,
+      })
+    }
+  })
+}
+
+async function loadSpecies() {
+  if (loaded) return
+
+  const res = await fetch('/mapdata/speciese.geojson')
+  const data = await res.json()
+
+  rawData = data.features
+  loaded = true
+
+  chunkLoad(rawData)
+}
 
 function toggleDistribution() {
   if (showLayer.value) {
@@ -95,153 +140,38 @@ function toggleDistribution() {
   }
 }
 
-function toggleSpecies() {
-  if (showSpecies.value) {
-    speciesLayer.value.addTo(map.value!)
-  } else {
-    map.value?.removeLayer(speciesLayer.value)
-  }
-}
-function toggleCaretta() {
-  if (showCaretta.value) {
-    carettaLayer.value.addTo(map.value!)
-  } else {
-    map.value?.removeLayer(carettaLayer.value)
-  }
-}
-
-function toggleGreen() {
-  if (showGreen.value) {
-    greenLayer.value.addTo(map.value!)
-  } else {
-    map.value?.removeLayer(greenLayer.value)
-  }
-}
-
-function toggleOlive() {
-  if (showOlive.value) {
-    oliveLayer.value.addTo(map.value!)
-  } else {
-    map.value?.removeLayer(oliveLayer.value)
-  }
-}
-
-function toggleLeather() {
-  if (showLeather.value) {
-    leatherLayer.value.addTo(map.value!)
-  } else {
-    map.value?.removeLayer(leatherLayer.value)
-  }
-}
-
-function toggleHawksbill() {
-  if (showHawksbill.value) {
-    hawksbillLayer.value.addTo(map.value!)
-  } else {
-    map.value?.removeLayer(hawksbillLayer.value)
-  }
-}
-
-function toggleFlatback() {
-  if (showFlatback.value) {
-    flatbackLayer.value.addTo(map.value!)
-  } else {
-    map.value?.removeLayer(flatbackLayer.value)
-  }
-}
-
-function toggleKemp() {
-  if (showKemp.value) {
-    kempLayer.value.addTo(map.value!)
-  } else {
-    map.value?.removeLayer(kempLayer.value)
-  }
-}
-const speciesColorMap: Record<string, string> = {
-  Carettacaretta: '#e74c3c', // 红
-  GreenSeaTurtle: '#27ae60', // 绿
-  OliveRidley: '#f39c12', // 橙，太平洋丽龟
-  Leatherback: '#8e44ad', // 紫，棱皮龟
-  Hawksbill: '#c7d531', // 黄绿，玳瑁
-  Flatback: '#34f1cb', // 青绿，平背龟
-  LepidochelysKempii: '#f494f5', // 亮绿，肯氏龟
-}
 onMounted(async () => {
   map.value = L.map('map', {
     center: [20, 0],
     zoom: 2,
     worldCopyJump: true,
+    preferCanvas: true, // 🚀 性能关键
   })
 
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap',
+  L.tileLayer('https://wprd0{s}.is.autonavi.com/appmaptile?style=7&x={x}&y={y}&z={z}', {
+    subdomains: ['1', '2', '3', '4'],
+    attribution: '© 高德地图',
   }).addTo(map.value)
 
-  // ── 分布格网 ────────────────────────────────
+  // 分布图
   const res1 = await fetch('/mapdata/distribute.geojson')
   const distData = await res1.json()
 
   distributionLayer.value = L.geoJSON(distData, {
     style: {
-      color: '#1e5889', // 边框深蓝
-      weight: 1.2,
-      fillColor: '#4da6ff', // 填充浅蓝（更明显）
-      fillOpacity: 0.35,
+      color: '#1e5889',
+      weight: 1,
+      fillColor: '#4da6ff',
+      fillOpacity: 0.3,
     },
   })
 
-  // ── 物种点 ───────────────────────────────────
-  const res2 = await fetch('/mapdata/speciese.geojson')
-  const speciesData = await res2.json()
+  if (showLayer.value) distributionLayer.value.addTo(map.value)
 
-  speciesData.features.forEach((f: any) => {
-    const speciesName = f.properties.name
-    const color = speciesColorMap[speciesName] || '#7f8c8d'
-    const marker = L.circleMarker([f.geometry.coordinates[1], f.geometry.coordinates[0]], {
-      radius: 6,
-      color: color,
-      fillColor: color,
-      fillOpacity: 0.85,
-      weight: 1.5,
-    })
+  speciesLayer.value.addTo(map.value)
 
-    marker.bindPopup(`
-      <b>${f.properties.common_name || '未知'}</b><br>
-      <span style="color:#555">${f.properties.species || ''}</span>
-    `)
-
-    if (speciesName === 'Carettacaretta') {
-      carettaLayer.value.addLayer(marker)
-    }
-    if (speciesName === 'GreenSeaTurtle') {
-      greenLayer.value.addLayer(marker)
-    }
-    if (speciesName === 'OliveRidley') {
-      oliveLayer.value.addLayer(marker)
-    }
-    if (speciesName === 'Leatherback') {
-      leatherLayer.value.addLayer(marker)
-    }
-    if (speciesName === 'Hawksbill') {
-      hawksbillLayer.value.addLayer(marker)
-    }
-    if (speciesName === 'Flatback') {
-      flatbackLayer.value.addLayer(marker)
-    }
-    if (speciesName === 'LepidochelysKempii') {
-      kempLayer.value.addLayer(marker)
-    }
-  })
-
-  // 初始显示（根据默认值）
-  if (showLayer.value) distributionLayer.value?.addTo(map.value)
-  if (showCaretta.value) carettaLayer.value.addTo(map.value)
-  if (showGreen.value) greenLayer.value.addTo(map.value)
-  if (showOlive.value) oliveLayer.value.addTo(map.value)
-  if (showLeather.value) leatherLayer.value.addTo(map.value)
-  if (showHawksbill.value) hawksbillLayer.value.addTo(map.value)
-  if (showFlatback.value) flatbackLayer.value.addTo(map.value)
-  if (showKemp.value) kempLayer.value.addTo(map.value)
+  // 初次加载
+  await loadSpecies()
 })
 </script>
 
@@ -263,12 +193,14 @@ onMounted(async () => {
 }
 
 .checkbox {
+  display: block;
+  margin-bottom: 6px;
   font-weight: 600;
 }
 
 .desc {
   font-size: 13px;
-  margin-top: 6px;
+  margin-top: 10px;
   color: #666;
 }
 </style>
